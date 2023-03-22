@@ -24,6 +24,14 @@ namespace Bau.Libraries.LibExcelFiles
 		}
 
 		/// <summary>
+		///		Carga un archivo Excel
+		/// </summary>
+		public void Load(System.IO.Stream stream)
+		{
+			_excel = new FastExcel.FastExcel(stream);
+		}
+
+		/// <summary>
 		///		Crea una hoja
 		/// </summary>
 		public void CreateWorksheet(string name)
@@ -55,6 +63,19 @@ namespace Bau.Libraries.LibExcelFiles
 		public void SetWorksheet(int sheet)
 		{
 			_workSheet = _excel.Read(sheet);
+		}
+
+		/// <summary>
+		///		Obtiene una fila
+		/// </summary>
+		public RowModel GetRow(int rowIndex)
+		{
+			// Busca la fila
+			foreach (Row row in _workSheet.Rows)
+				if (row.RowNumber == rowIndex)
+					return ConvertRow(row);
+			// Si ha llegado hasta aquí es porque no ha encontrado nada
+			return null;
 		}
 
 		/// <summary>

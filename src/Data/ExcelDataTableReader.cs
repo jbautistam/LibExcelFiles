@@ -93,7 +93,7 @@ public class ExcelDataTableReader
 	/// </summary>
 	private ExcelManager Load(string fileName)
 	{
-		ExcelManager manager = new ExcelManager();
+		ExcelManager manager = new();
 
 			// Carga el archivo
 			manager.Load(fileName, true);
@@ -106,7 +106,7 @@ public class ExcelDataTableReader
 	/// </summary>
 	private DataTable Create(ExcelManager manager, int startRow, long rows, bool withHeader)
 	{
-		DataTable table = new DataTable();
+		DataTable table = new();
 		long rowsRead = 0;
 
 			// Recorre las filas

@@ -12,7 +12,7 @@ public class ExcelReader : IDataReader
 	// Eventos públicos
 	public event EventHandler<EventArguments.AffectedEvntArgs>? ReadBlock;
 	// Variables privadas
-	private ExcelManager _manager;
+	private ExcelManager? _manager;
 	private List<object> _recordsValues = [];
 	private int _row;
 
@@ -65,20 +65,21 @@ public class ExcelReader : IDataReader
 	/// </summary>
 	private void LoadColumns()
 	{
-		RowModel rowHeader = _manager.GetRow(1);
-		RowModel rowData = _manager.GetRow(2);
+		RowModel? rowHeader = _manager.GetRow(1);
+		RowModel? rowData = _manager.GetRow(2);
 
 			// Añade los datos de la columna
-			for (int index = 0; index < rowData.Cells.Count; index++)
-			{
-				string name = $"Column{index.ToString()}";
+			if (rowData is not null)
+				for (int index = 0; index < rowData.Cells.Count; index++)
+				{
+					string name = $"Column{index.ToString()}";
 
-					// Si tenemos fila de cabecera, recogemos los datos de la cabecera
-					if (WithHeader)
-						name = rowHeader.Cells[index].Value?.ToString() ?? string.Empty;
-					// Añadimos la columna
-					Columns.Add((name, rowData.Cells[index].GetType()));
-			}
+						// Si tenemos fila de cabecera, recogemos los datos de la cabecera
+						if (WithHeader && rowHeader is not null)
+							name = rowHeader.Cells[index].Value?.ToString() ?? string.Empty;
+						// Añadimos la columna
+						Columns.Add((name, rowData.Cells[index].GetType()));
+				}
 	}
 
 	/// <summary>
@@ -87,10 +88,10 @@ public class ExcelReader : IDataReader
 	public bool Read()
 	{
 		bool readed = false;
-		RowModel line = _manager.GetRow(_row);
+		RowModel? line = _manager.GetRow(_row);
 
 			// Interpreta los datos
-			if (line != null)
+			if (line is not null)
 			{
 				// Interpreta la línea
 				_recordsValues = new List<object>();
@@ -113,7 +114,7 @@ public class ExcelReader : IDataReader
 	/// </summary>
 	public void Close()
 	{
-		if (_manager != null)
+		if (_manager is not null)
 		{
 			// Cierra el archivo
 			_manager.Close();
